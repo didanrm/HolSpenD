@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Deep teal from the logo's bottom-left, so the launch screen and the
+         logo tile read as one surface. -->
+    <color name="brand_green">#065963</color>
+</resources>

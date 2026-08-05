@@ -1,0 +1,40 @@
+# Flutter / Dart
+# pubspec.lock is committed on purpose: this is an app, not a library, so the
+# exact dependency versions should be reproducible for everyone and for CI.
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Android
+android/local.properties
+
+# Release signing — never commit these. CI writes them from repository secrets.
+android/key.properties
+*.jks
+*.keystore
+android/.gradle/
+android/app/debug
+android/app/profile
+android/app/release
+android/gradle/
+android/gradlew
+android/gradlew.bat
+
+# Firebase config — regenerate with `flutterfire configure`, or let CI write it
+# from repository secrets. Not committed: this repo is public, and an exposed
+# project id invites strangers to burn the free-tier quota even though the
+# security rules keep their hands off other people's data.
+lib/firebase_options.dart
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+.firebase/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# macOS
+.DS_Store

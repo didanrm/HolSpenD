@@ -1,0 +1,29 @@
+// TEMPLATE — copy to firebase_options.dart, or just run:
+//
+//   flutterfire configure
+//
+// which overwrites the real file with your own project's values and also writes
+// android/app/google-services.json.
+//
+// The real firebase_options.dart is gitignored. CI writes it from the
+// FIREBASE_OPTIONS repository secret before building.
+
+import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
+
+const _placeholder = 'REPLACE_ME';
+
+class DefaultFirebaseOptions {
+  /// False until `flutterfire configure` fills this file in. `main()` checks
+  /// this and shows SetupRequiredScreen instead of crashing.
+  static bool get isConfigured => android.apiKey != _placeholder;
+
+  static FirebaseOptions get currentPlatform => android;
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: _placeholder,
+    appId: _placeholder,
+    messagingSenderId: _placeholder,
+    projectId: _placeholder,
+    storageBucket: _placeholder,
+  );
+}
