@@ -113,16 +113,16 @@ jobs:
             --build-name="${{ steps.version.outputs.version }}" \
             --build-number="${{ github.run_number }}"
           mv build/app/outputs/flutter-apk/app-release.apk \
-             "holspend-${{ steps.version.outputs.version }}.apk"
+             "HolSpenD-${{ steps.version.outputs.version }}.apk"
 
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$GITHUB_REF_NAME" \
-            --title "HolSpend ${{ steps.version.outputs.version }}" \
+            --title "HolSpenD ${{ steps.version.outputs.version }}" \
             --generate-notes \
-            "holspend-${{ steps.version.outputs.version }}.apk"
+            "HolSpenD-${{ steps.version.outputs.version }}.apk"
 
       # Keep the signing material out of the runner's reach for anything that
       # might run afterwards.
