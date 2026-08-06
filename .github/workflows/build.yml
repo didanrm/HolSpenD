@@ -2,7 +2,9 @@ name: Build APK
 
 on:
   push:
-    branches: [main]
+    # Feature branches build too: the APK artifact is how changes get tested on
+    # a real phone without a local Android toolchain.
+    branches: [main, 'feat/**', 'fix/**']
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -83,6 +85,6 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: holspend-debug-${{ github.sha }}
+          name: HolSpenD-debug-${{ github.sha }}
           path: build/app/outputs/flutter-apk/app-debug.apk
           retention-days: 30
