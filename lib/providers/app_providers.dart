@@ -22,10 +22,15 @@ final authStateProvider = StreamProvider<User?>(
   (ref) => ref.watch(authServiceProvider).authState,
 );
 
-/// Null while signed out.
+/// Null while signed out — that is the guest state, not an error.
 final currentUserProvider = Provider<User?>(
   (ref) => ref.watch(authStateProvider).valueOrNull,
 );
+
+/// True once the welcome sign-in prompt has been shown, so it appears at most
+/// once per app launch. Deliberately not persisted: a guest who reopens the app
+/// tomorrow should be invited again.
+final welcomePromptShownProvider = StateProvider<bool>((ref) => false);
 
 final activeBudgetProvider = StreamProvider<Budget?>((ref) {
   final user = ref.watch(currentUserProvider);
