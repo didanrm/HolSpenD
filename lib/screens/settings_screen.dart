@@ -133,6 +133,23 @@ class SettingsScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
               child: Column(
                 children: [
+                  ListTile(
+                    leading: const Icon(Icons.language),
+                    title: const Text('Bahasa'),
+                    subtitle: const Text('Indonesia'),
+                    trailing: Icon(
+                      Icons.chevron_right,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                    // Indonesian is the only language the app ships. The row is
+                    // here because the design calls for it; wiring it up needs
+                    // flutter_localizations and every string extracted first.
+                    onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Pilihan bahasa segera hadir.'),
+                      ),
+                    ),
+                  ),
                   const ListTile(
                     leading: Icon(Icons.info_outline),
                     title: Text('Tentang HolSpenD'),

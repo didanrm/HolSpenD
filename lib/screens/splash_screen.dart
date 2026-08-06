@@ -19,11 +19,19 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // The logo already carries the wordmark, so no title text here.
+            // The mark is wordmark-free, so the name is set as text below it.
             Image.asset('assets/logo.png', width: 132, height: 132),
             const SizedBox(height: 16),
             Text(
-              message ?? 'Daily Wallet Companion',
+              'HolSpenD',
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.5,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              message ?? 'Hold Your Spending!',
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
