@@ -108,8 +108,6 @@ class _AuthSheetState extends State<_AuthSheet> {
                 ),
               ),
             ),
-            const SizedBox(height: 22),
-            Center(child: Image.asset('assets/logo.png', width: 72, height: 72)),
             const SizedBox(height: 18),
             Text(
               widget.message,
