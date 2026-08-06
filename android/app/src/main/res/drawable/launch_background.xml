@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Shown by Android before the Flutter engine renders its first frame. Matching
-     it to the in-app splash avoids the white flash between the two. -->
+<!-- Shown by Android before the Flutter engine renders its first frame, on
+     API < 31. Android 12+ ignores this and uses values-v31/styles.xml instead. -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/brand_green"/>
+    <item android:drawable="@color/splash_background"/>
     <item>
         <bitmap
             android:gravity="center"
