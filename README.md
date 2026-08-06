@@ -2,7 +2,7 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/banner-dark.png">
-  <img src="docs/banner.png" width="460" alt="HolSpend">
+  <img src="docs/banner.png" width="460" alt="HolSpenD">
 </picture>
 
 ### Berapa uang yang aman saya keluarkan hari ini?
@@ -29,7 +29,7 @@ Aplikasi pencatat pengeluaran biasanya menampilkan total, sisa budget, dan
 grafik. Semuanya benar. Tak satu pun menjawab pertanyaan yang benar-benar muncul
 saat kamu berdiri di depan kasir.
 
-HolSpend menjawabnya dengan **satu angka**: Wallet Hari Ini.
+HolSpenD menjawabnya dengan **satu angka**: Wallet Hari Ini.
 
 ```
 Budget    Rp1.400.000        Jatah harian    Rp51.851
