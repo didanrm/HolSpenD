@@ -99,7 +99,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           child: ListView(
             padding: const EdgeInsets.fromLTRB(18, 8, 18, 110),
             children: [
-              _Header(name: firstName, photoUrl: user?.photoURL),
+              _Header(name: firstName, photoUrl: user?.photoURL, date: today),
               const SizedBox(height: 18),
               WalletHero(snapshot: view),
               const SizedBox(height: 14),
@@ -173,9 +173,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.name, this.photoUrl});
+  const _Header({required this.name, required this.date, this.photoUrl});
 
   final String name;
+
+  /// Comes from `todayProvider`, so the date rolls over at midnight with the
+  /// rest of the dashboard instead of freezing at build time.
+  final DateTime date;
   final String? photoUrl;
 
   @override
@@ -188,7 +192,9 @@ class _Header extends StatelessWidget {
           radius: 22,
           backgroundColor: theme.colorScheme.primaryContainer,
           backgroundImage: photoUrl != null ? NetworkImage(photoUrl!) : null,
-          child: photoUrl == null ? const Text('👋') : null,
+          child: photoUrl == null
+              ? Icon(Icons.person, color: theme.colorScheme.onPrimaryContainer)
+              : null,
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -196,12 +202,12 @@ class _Header extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Halo, $name 👋',
+                'Halo, $name!',
                 style: theme.textTheme.titleMedium
                     ?.copyWith(fontWeight: FontWeight.w700),
               ),
               Text(
-                formatDateLong(DateTime.now()),
+                formatDateLong(date),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
