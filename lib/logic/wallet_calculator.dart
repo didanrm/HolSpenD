@@ -31,6 +31,24 @@ class WalletSnapshot {
     required this.tomorrowWallet,
   });
 
+  /// All-zero snapshot for when there is nothing to compute from — a guest who
+  /// has not signed in yet. Lets every dashboard widget be reused as-is instead
+  /// of growing a parallel set of "empty" variants.
+  const WalletSnapshot.empty()
+      : phase = BudgetPhase.upcoming,
+        totalDays = 0,
+        currentDay = 0,
+        dailyAllowance = 0,
+        walletToday = 0,
+        expenseToday = 0,
+        walletRemaining = 0,
+        carryOver = 0,
+        totalExpense = 0,
+        budgetAmount = 0,
+        budgetRemaining = 0,
+        progress = 0,
+        tomorrowWallet = null;
+
   final BudgetPhase phase;
   final int totalDays;
 
