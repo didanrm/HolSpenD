@@ -88,7 +88,7 @@ class _CreateBudgetScreenState extends ConsumerState<CreateBudgetScreen> {
           title: const Text('Ganti budget aktif?'),
           content: const Text(
             'Budget yang sedang berjalan akan ditutup dan riwayatnya tetap '
-            'tersimpan. HolSpend hanya menjalankan satu budget aktif.',
+            'tersimpan. HolSpenD hanya menjalankan satu budget aktif.',
           ),
           actions: [
             TextButton(
@@ -141,7 +141,7 @@ class _CreateBudgetScreenState extends ConsumerState<CreateBudgetScreen> {
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
             children: [
               Text(
-                'Tentukan budget dan periodenya. HolSpend akan membagi otomatis '
+                'Tentukan budget dan periodenya. HolSpenD akan membagi otomatis '
                 'menjadi jatah harian.',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
