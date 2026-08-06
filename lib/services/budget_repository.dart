@@ -29,7 +29,7 @@ class BudgetRepository {
   Future<void> upsertProfile(User user) {
     return _userDoc(user.uid).set({
       'profile': {
-        'name': user.displayName ?? 'Teman HolSpend',
+        'name': user.displayName ?? 'Teman HolSpenD',
         'email': user.email,
         'photoUrl': user.photoURL,
       },

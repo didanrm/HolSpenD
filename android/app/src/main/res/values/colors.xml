@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Deep teal from the logo's bottom-left, so the launch screen and the
-         logo tile read as one surface. -->
+    <!-- Launch screen is plain white so the app opens without a coloured flash. -->
+    <color name="splash_background">#FFFFFF</color>
+    <!-- Deep teal from the logo, still used by the adaptive icon gradient. -->
     <color name="brand_green">#065963</color>
 </resources>

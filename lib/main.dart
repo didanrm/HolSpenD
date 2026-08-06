@@ -9,7 +9,6 @@ import 'firebase_options.dart';
 import 'providers/app_providers.dart';
 import 'screens/create_budget_screen.dart';
 import 'screens/dashboard_screen.dart';
-import 'screens/login_screen.dart';
 import 'screens/splash_screen.dart';
 
 Future<void> main() async {
@@ -29,18 +28,18 @@ Future<void> main() async {
     bootError = 'not-configured';
   }
 
-  runApp(ProviderScope(child: HolSpendApp(bootError: bootError)));
+  runApp(ProviderScope(child: HolSpenDApp(bootError: bootError)));
 }
 
-class HolSpendApp extends StatelessWidget {
-  const HolSpendApp({super.key, this.bootError});
+class HolSpenDApp extends StatelessWidget {
+  const HolSpenDApp({super.key, this.bootError});
 
   final String? bootError;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'HolSpend',
+      title: 'HolSpenD',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
       locale: const Locale('id', 'ID'),
@@ -57,7 +56,9 @@ class HolSpendApp extends StatelessWidget {
   }
 }
 
-/// Splash -> Login -> (no budget) Create Budget -> Dashboard. (PRD §7)
+/// Splash -> Dashboard. Signing in is no longer a wall in front of the app:
+/// a guest lands straight on the dashboard and is invited to sign in from
+/// there, so the product can be understood before it asks for anything.
 class AuthGate extends ConsumerWidget {
   const AuthGate({super.key});
 
@@ -69,7 +70,8 @@ class AuthGate extends ConsumerWidget {
       loading: () => const SplashScreen(),
       error: (e, _) => SetupRequiredScreen(reason: '$e'),
       data: (user) {
-        if (user == null) return const LoginScreen();
+        // Guest: dashboard in read-only mode, no budget to load.
+        if (user == null) return const DashboardScreen(budget: null);
         return const _BudgetGate();
       },
     );

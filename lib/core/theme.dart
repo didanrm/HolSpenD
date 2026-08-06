@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class AppColors {
   static const seed = Color(0xFF00A67E);
 
-  /// Deep teal taken from the logo, shared with the Android launch theme so the
+  /// Shared with `@color/splash_background` in the Android launch theme so the
   /// native splash and the Flutter splash are the same colour.
-  static const splash = Color(0xFF065963);
+  static const splash = Colors.white;
   static const positive = Color(0xFF12A150);
   static const negative = Color(0xFFE5484D);
   static const warning = Color(0xFFF5A524);
