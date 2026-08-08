@@ -40,16 +40,37 @@ build_apk:
     - cp "$FIREBASE_OPTIONS" lib/firebase_options.dart
     - cp "$GOOGLE_SERVICES_JSON" android/app/google-services.json
     - |
-      # Release signing is opt-in — android/app/build.gradle falls back to the
-      # debug key when key.properties is absent.
       if [ -n "$KEYSTORE_BASE64" ]; then
-        echo "$KEYSTORE_BASE64" | base64 -d > android/upload-keystore.jks
+        printf '%s' "$KEYSTORE_BASE64" | tr -d ' \t\r\n' | base64 -d > android/upload-keystore.jks
+
+        KEY_ALIAS="${KEY_ALIAS:-upload}"
+        KEY_PASSWORD="${KEY_PASSWORD:-$KEYSTORE_PASSWORD}"
+
+        if ! keytool -list -keystore android/upload-keystore.jks \
+             -storepass "$KEYSTORE_PASSWORD" -alias "$KEY_ALIAS" > /dev/null 2>&1; then
+          echo "Cannot open the keystore: wrong KEYSTORE_PASSWORD, or no key named '$KEY_ALIAS' in it."
+          echo "Aliases in the keystore:"
+          keytool -list -keystore android/upload-keystore.jks -storepass "$KEYSTORE_PASSWORD" \
+            | grep PrivateKeyEntry || echo "  (could not read the store at all)"
+          exit 1
+        fi
+        if ! keytool -certreq -keystore android/upload-keystore.jks \
+             -storepass "$KEYSTORE_PASSWORD" -alias "$KEY_ALIAS" \
+             -keypass "$KEY_PASSWORD" > /dev/null 2>&1; then
+          echo "Wrong KEY_PASSWORD for alias '$KEY_ALIAS'."
+          echo "If you pressed RETURN when keytool asked for the key password, set KEY_PASSWORD to the same value as KEYSTORE_PASSWORD (or leave it unset)."
+          exit 1
+        fi
+
         {
           echo "storeFile=upload-keystore.jks"
           echo "storePassword=$KEYSTORE_PASSWORD"
           echo "keyAlias=$KEY_ALIAS"
           echo "keyPassword=$KEY_PASSWORD"
         } > android/key.properties
+
+        keytool -list -v -keystore android/upload-keystore.jks \
+          -storepass "$KEYSTORE_PASSWORD" -alias "$KEY_ALIAS" | grep -E "SHA1:|SHA-1:"
       else
         echo "No KEYSTORE_BASE64 — building with the debug signing key."
       fi
@@ -102,7 +123,6 @@ github_release:
         echo "could not create the release:"; echo "$RELEASE"; exit 1
       fi
 
-      # Replace an asset of the same name so re-running the job is safe.
       OLD_ASSET=$(curl -s -H "$AUTH" -H "$HDR" "$API/releases/$RELEASE_ID/assets" \
         | jq -r --arg n "$APK_NAME" '.[] | select(.name == $n) | .id')
       if [ -n "$OLD_ASSET" ]; then
