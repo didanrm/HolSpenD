@@ -1,0 +1,116 @@
+stages:
+  - test
+  - build
+  - release
+
+default:
+  image: ghcr.io/cirruslabs/flutter:3.44.8
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^\d+\.\d+\.\d+([-+].*)?$/
+
+variables:
+  APK_NAME: HolSpenD-$CI_COMMIT_TAG.apk
+  PUB_CACHE: $CI_PROJECT_DIR/.pub-cache
+
+cache:
+  key:
+    files:
+      - pubspec.lock
+  paths:
+    - .pub-cache/
+
+analyze_and_test:
+  stage: test
+  before_script:
+    - cp lib/firebase_options.dart.example lib/firebase_options.dart
+    - flutter pub get
+  script:
+    - flutter analyze
+    - flutter test
+
+build_apk:
+  stage: build
+  before_script:
+    - |
+      if [ -z "$FIREBASE_OPTIONS" ] || [ -z "$GOOGLE_SERVICES_JSON" ]; then
+        echo "FIREBASE_OPTIONS and GOOGLE_SERVICES_JSON must be set as file-type CI variables."
+        exit 1
+      fi
+    - cp "$FIREBASE_OPTIONS" lib/firebase_options.dart
+    - cp "$GOOGLE_SERVICES_JSON" android/app/google-services.json
+    - |
+      # Release signing is opt-in — android/app/build.gradle falls back to the
+      # debug key when key.properties is absent.
+      if [ -n "$KEYSTORE_BASE64" ]; then
+        echo "$KEYSTORE_BASE64" | base64 -d > android/upload-keystore.jks
+        {
+          echo "storeFile=upload-keystore.jks"
+          echo "storePassword=$KEYSTORE_PASSWORD"
+          echo "keyAlias=$KEY_ALIAS"
+          echo "keyPassword=$KEY_PASSWORD"
+        } > android/key.properties
+      else
+        echo "No KEYSTORE_BASE64 — building with the debug signing key."
+      fi
+    - flutter pub get
+  script:
+    - flutter build apk --release --build-name="$CI_COMMIT_TAG" --build-number="$CI_PIPELINE_IID"
+    - mv build/app/outputs/flutter-apk/app-release.apk "$APK_NAME"
+  artifacts:
+    name: $APK_NAME
+    paths:
+      - $APK_NAME
+    expire_in: 1 month
+
+github_release:
+  stage: release
+  image: alpine:3.20
+  needs:
+    - build_apk
+  before_script:
+    - apk add --no-cache curl jq
+  script:
+    - |
+      set -e
+      : "${GITHUB_TOKEN:?set GITHUB_TOKEN in CI/CD variables}"
+      : "${GITHUB_REPO:?set GITHUB_REPO}"
+      API="https://api.github.com/repos/$GITHUB_REPO"
+      AUTH="Authorization: Bearer $GITHUB_TOKEN"
+      HDR="Accept: application/vnd.github+json"
+
+      for i in $(seq 1 20); do
+        if curl -sf -H "$AUTH" -H "$HDR" "$API/git/ref/tags/$CI_COMMIT_TAG" > /dev/null; then
+          echo "tag $CI_COMMIT_TAG is on GitHub"
+          break
+        fi
+        echo "waiting for mirror to push $CI_COMMIT_TAG ($i/20)..."
+        sleep 15
+      done
+
+      RELEASE=$(curl -s -H "$AUTH" -H "$HDR" "$API/releases/tags/$CI_COMMIT_TAG")
+      RELEASE_ID=$(echo "$RELEASE" | jq -r '.id // empty')
+      if [ -z "$RELEASE_ID" ]; then
+        RELEASE=$(curl -s -X POST -H "$AUTH" -H "$HDR" "$API/releases" \
+          -d "$(jq -n --arg tag "$CI_COMMIT_TAG" \
+                      --arg body "HolSpenD $CI_COMMIT_TAG — built from GitLab pipeline $CI_PIPELINE_ID." \
+                      '{tag_name: $tag, name: $tag, body: $body, draft: false, prerelease: false}')")
+        RELEASE_ID=$(echo "$RELEASE" | jq -r '.id // empty')
+      fi
+      if [ -z "$RELEASE_ID" ]; then
+        echo "could not create the release:"; echo "$RELEASE"; exit 1
+      fi
+
+      # Replace an asset of the same name so re-running the job is safe.
+      OLD_ASSET=$(curl -s -H "$AUTH" -H "$HDR" "$API/releases/$RELEASE_ID/assets" \
+        | jq -r --arg n "$APK_NAME" '.[] | select(.name == $n) | .id')
+      if [ -n "$OLD_ASSET" ]; then
+        curl -sf -X DELETE -H "$AUTH" -H "$HDR" "$API/releases/assets/$OLD_ASSET"
+      fi
+
+      curl -sf -X POST -H "$AUTH" -H "$HDR" \
+        -H "Content-Type: application/vnd.android.package-archive" \
+        --data-binary "@$APK_NAME" \
+        "https://uploads.github.com/repos/$GITHUB_REPO/releases/$RELEASE_ID/assets?name=$APK_NAME" \
+        | jq -r '"uploaded: " + .browser_download_url'
