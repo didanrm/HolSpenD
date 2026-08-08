@@ -217,6 +217,7 @@ class _Header extends StatelessWidget {
         ),
         IconButton(
           tooltip: 'Riwayat',
+          visualDensity: VisualDensity.compact,
           onPressed: () => Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const HistoryScreen()),
@@ -225,6 +226,7 @@ class _Header extends StatelessWidget {
         ),
         IconButton(
           tooltip: 'Pengaturan',
+          visualDensity: VisualDensity.compact,
           onPressed: () => Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const SettingsScreen()),
