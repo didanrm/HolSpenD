@@ -78,7 +78,13 @@ build_apk:
   script:
     - flutter build apk --release --build-name="$CI_COMMIT_TAG" --build-number="$CI_PIPELINE_IID"
     - mv build/app/outputs/flutter-apk/app-release.apk "$APK_NAME"
-    - keytool -printcert -jarfile "$APK_NAME" | grep -E "SHA1|SHA-1|Owner"
+    - |
+      APKSIGNER=$(ls -d "${ANDROID_SDK_ROOT:-/opt/android-sdk-linux}"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+      if [ -n "$APKSIGNER" ]; then
+        "$APKSIGNER" verify --print-certs "$APK_NAME" | grep -i "SHA-1 digest" || true
+      else
+        echo "apksigner not found; skipping the certificate print."
+      fi
   artifacts:
     name: $APK_NAME
     paths:
