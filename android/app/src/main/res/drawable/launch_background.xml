@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Shown by Android before the Flutter engine renders its first frame, on
-     API < 31. Android 12+ ignores this and uses values-v31/styles.xml instead. -->
+     API < 31. Android 12+ ignores this and uses values-v31/styles.xml instead.
+
+     The size is pinned in dp on purpose: splash_logo lives in drawable-nodpi,
+     and an unsized bitmap is drawn at its pixel size regardless of density,
+     which is how it ended up filling a third of the screen. 132dp is the same
+     size SplashScreen draws the logo at, so the handover is seamless. -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/splash_background"/>
-    <item>
+    <item
+        android:width="132dp"
+        android:height="132dp"
+        android:gravity="center">
         <bitmap
             android:gravity="center"
             android:src="@drawable/splash_logo"/>
