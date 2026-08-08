@@ -1,0 +1,20 @@
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+// Keeps every module's output under <project>/build, matching Flutter's layout.
+rootProject.layout.buildDirectory.set(file("../build"))
+
+subprojects {
+    project.layout.buildDirectory.set(
+        rootProject.layout.buildDirectory.dir(project.name)
+    )
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.layout.buildDirectory
+}
