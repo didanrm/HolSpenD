@@ -102,11 +102,10 @@ class TodayCard extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: StatBlock(
-              label: 'Sisa wallet',
-              value: formatRupiah(snapshot.walletRemaining),
-              valueColor: snapshot.walletRemaining < 0
-                  ? AppColors.negative
-                  : AppColors.positive,
+              label: 'Wallet awal',
+              value: formatRupiah(snapshot.walletToday),
+              valueColor:
+                  snapshot.walletToday < 0 ? AppColors.negative : null,
             ),
           ),
         ],
