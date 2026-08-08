@@ -11,7 +11,6 @@ Aplikasi pengelola pengeluaran berbasis **Daily Wallet** — budget dibagi jadi
 jatah harian, sisa hari ini dibawa ke besok, boros hari ini mengecilkan jatah
 besok.
 
-[![Release](https://github.com/didanrm/HolSpenD/actions/workflows/release.yml/badge.svg)](https://github.com/didanrm/HolSpenD/actions/workflows/release.yml)
 [![Release](https://img.shields.io/github/v/release/didanrm/HolSpenD?label=Unduh%20APK&color=3DDC84&logo=android&logoColor=white)](https://github.com/didanrm/HolSpenD/releases/latest)
 [![Flutter](https://img.shields.io/badge/Flutter-3.44-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.12-0175C2?logo=dart&logoColor=white)](https://dart.dev)
