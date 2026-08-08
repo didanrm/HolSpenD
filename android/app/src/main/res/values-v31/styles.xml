@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Android 12+ ignores windowBackground and draws its own splash screen, so the
-     white background has to be declared again with the splash-screen API.
-     The animated icon is left unset on purpose: the system then uses the
-     launcher icon, which already respects the 66% safe zone. -->
+     white background and the icon have to be declared again with the
+     splash-screen API. -->
 <resources>
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
         <item name="android:windowSplashScreenBackground">@color/splash_background</item>
+        <!-- Without this the system falls back to the launcher icon, which it
+             masks into a circle over a teal plate — a different-looking opening
+             than the white screen SplashScreen hands over to. splash_icon is
+             already inset to survive that circular clip. -->
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>
     </style>
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
