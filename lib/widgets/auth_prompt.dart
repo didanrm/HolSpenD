@@ -18,10 +18,20 @@ class AuthPromptCopy {
 /// Lives here rather than on a screen because three different places need it:
 /// the welcome prompt, every write action, and the settings screen.
 Future<bool> _signIn(WidgetRef ref) async {
-  final user = await ref.read(authServiceProvider).signInWithGoogle();
+  // Every service is resolved up front, before the first await: a successful
+  // sign-in flips authStateProvider, AuthGate swaps the guest screen out, and
+  // the WidgetRef captured here dies with it. Touching `ref` afterwards throws
+  // "Cannot use ref after the widget was disposed" — which the sheet would then
+  // report as a failed login even though the user is signed in.
+  final auth = ref.read(authServiceProvider);
+  final repository = ref.read(budgetRepositoryProvider);
+  final analytics = ref.read(analyticsProvider);
+
+  final user = await auth.signInWithGoogle();
   if (user == null) return false; // account picker dismissed
-  await ref.read(budgetRepositoryProvider).upsertProfile(user);
-  ref.read(analyticsProvider).loginSucceeded();
+
+  await repository.upsertProfile(user);
+  analytics.loginSucceeded();
   return true;
 }
 
