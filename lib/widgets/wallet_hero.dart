@@ -69,7 +69,9 @@ class WalletHero extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               _HeroChip(
-                label: snapshot.carryOver < 0 ? 'Kekurangan kemarin' : 'Carry over',
+                label: snapshot.carryOver < 0
+                    ? 'Kekurangan sebelumnya'
+                    : 'Sisa sebelumnya',
                 value: formatRupiah(snapshot.carryOver),
               ),
             ],
