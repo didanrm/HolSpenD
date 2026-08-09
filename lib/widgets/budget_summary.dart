@@ -54,6 +54,7 @@ class BudgetSummaryCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: StatBlock(
@@ -61,12 +62,14 @@ class BudgetSummaryCard extends StatelessWidget {
                   value: formatRupiah(snapshot.budgetAmount),
                 ),
               ),
+              const SizedBox(width: 12),
               Expanded(
                 child: StatBlock(
                   label: 'Terpakai',
                   value: formatRupiah(snapshot.totalExpense),
                 ),
               ),
+              const SizedBox(width: 12),
               Expanded(
                 child: StatBlock(
                   label: 'Sisa',

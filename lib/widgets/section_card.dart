@@ -63,11 +63,19 @@ class StatBlock extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        Text(
-          value,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: valueColor,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: align == CrossAxisAlignment.end
+              ? Alignment.centerRight
+              : Alignment.centerLeft,
+          child: Text(
+            value,
+            maxLines: 1,
+            softWrap: false,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: valueColor,
+            ),
           ),
         ),
       ],
